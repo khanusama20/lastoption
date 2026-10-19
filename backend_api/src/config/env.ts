@@ -9,4 +9,7 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:3000',
   isProduction: process.env.NODE_ENV === 'production',
+  databaseUrl: process.env.DATABASE_URL || '',
+  jwtSecret: process.env.JWT_SECRET || '',
+  cookieSecret: process.env.COOKIE_SECRET || '',
 };
