@@ -1,11 +1,11 @@
 <template>
   <header class="sticky top-0 z-40 bg-[#0B0D10]/95 backdrop-blur-md border-b border-[#1E2633] transition-colors duration-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16 sm:h-20">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full">
+      <div class="flex items-center justify-between h-16 sm:h-20 w-full">
         <!-- Brand Logo -->
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
           <NuxtLink to="/" class="group flex items-center space-x-2 focus:outline-none">
-            <span class="text-xl sm:text-2xl font-black tracking-[0.25em] text-white uppercase group-hover:text-[#D4AF37] transition-colors">
+            <span class="text-base sm:text-2xl font-black tracking-[0.1em] sm:tracking-[0.25em] text-white uppercase group-hover:text-[#D4AF37] transition-colors whitespace-nowrap">
               Last Option
             </span>
             <span class="hidden sm:inline-block text-[10px] uppercase tracking-widest px-2 py-0.5 rounded bg-[#14181F] text-[#D4AF37] border border-[#2D3748] font-semibold">
@@ -38,12 +38,12 @@
         </nav>
 
         <!-- Right Action Icons (Search, Cart, Mobile Toggle) -->
-        <div class="flex items-center space-x-4 sm:space-x-6">
+        <div class="flex items-center space-x-1.5 sm:space-x-4 shrink-0">
           <!-- Search Trigger -->
           <button
             type="button"
             @click="isSearchOpen = !isSearchOpen"
-            class="text-[#A0AEC0] hover:text-white p-2 rounded-lg hover:bg-[#14181F] transition-colors"
+            class="text-[#A0AEC0] hover:text-white p-1.5 sm:p-2 rounded-lg hover:bg-[#14181F] transition-colors"
             aria-label="Search Catalog"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,14 +54,14 @@
           <!-- Cart Trigger -->
           <button
             type="button"
-            class="relative inline-flex items-center space-x-2 px-3 py-1.5 rounded-md bg-[#14181F] border border-[#2D3748] hover:border-[#D4AF37] text-white text-xs font-semibold uppercase tracking-wider transition-all"
+            class="relative inline-flex items-center space-x-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-md bg-[#14181F] border border-[#2D3748] hover:border-[#D4AF37] text-white text-xs font-semibold uppercase tracking-wider transition-all"
             aria-label="Shopping Cart"
           >
             <svg class="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            <span>Cart</span>
-            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1A202C] text-[#D4AF37] text-[11px] font-bold">
+            <span class="hidden sm:inline">Cart</span>
+            <span class="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#1A202C] text-[#D4AF37] text-[10px] sm:text-[11px] font-bold">
               0
             </span>
           </button>
@@ -70,13 +70,13 @@
           <button
             type="button"
             @click="isMobileMenuOpen = !isMobileMenuOpen"
-            class="md:hidden text-[#A0AEC0] hover:text-white p-2 focus:outline-none"
+            class="md:hidden text-[#A0AEC0] hover:text-white p-1.5 sm:p-2 rounded-lg hover:bg-[#14181F] focus:outline-none shrink-0"
             aria-label="Toggle navigation menu"
           >
-            <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-if="!isMobileMenuOpen" class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-else class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>

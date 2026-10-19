@@ -12,7 +12,8 @@
           </p>
           <div class="pt-2">
             <a
-              href="https://wa.me/919999999999?text=Hello%20Last%20Option%2C%20I%20have%20an%20inquiry%20regarding%20outerwear."
+              v-if="whatsappUrl"
+              :href="whatsappUrl"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center space-x-2 px-3 py-1.5 rounded bg-[#14181F] border border-[#2D3748] hover:border-[#D4AF37] text-white text-xs font-medium tracking-wide transition-colors"
@@ -22,6 +23,14 @@
               </svg>
               <span>WhatsApp Concierge</span>
             </a>
+            <span
+              v-else
+              class="inline-flex items-center space-x-2 px-3 py-1.5 rounded bg-[#14181F] border border-[#2D3748] text-[#718096] text-xs font-medium tracking-wide cursor-not-allowed"
+              title="WhatsApp customer support contact is pending environment configuration"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500/80"></span>
+              <span>WhatsApp Support (Pending Setup)</span>
+            </span>
           </div>
         </div>
 
@@ -53,7 +62,7 @@
         <div class="space-y-3">
           <p class="text-xs font-bold uppercase tracking-widest text-white">Direct-to-Consumer</p>
           <p class="text-xs text-[#718096] leading-relaxed">
-            Shipped directly from our manufacturing partner in India with zero retail middleman markup.
+            Exclusive direct-to-consumer men's outerwear tailored for Indian sizing and climate.
           </p>
           <div class="space-y-1 text-xs text-[#718096]">
             <p class="text-white font-medium">Payment Partners:</p>
@@ -74,5 +83,14 @@
 </template>
 
 <script setup lang="ts">
-// Footer component matching Wireframe 2.1
+import { computed } from 'vue';
+
+const config = useRuntimeConfig();
+const whatsappNumber = computed(() => (config.public.whatsappNumber as string) || '');
+
+const whatsappUrl = computed(() => {
+  if (!whatsappNumber.value) return null;
+  const text = encodeURIComponent('Hello Last Option, I have an inquiry regarding outerwear.');
+  return `https://wa.me/${whatsappNumber.value}?text=${text}`;
+});
 </script>

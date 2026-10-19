@@ -58,23 +58,23 @@
         </div>
       </div>
 
-      <!-- Secondary Trust Badges -->
+      <!-- Approved Value Propositions matching Requirements 3.1 -->
       <div id="story" class="mt-16 pt-12 border-t border-[#1E2633] grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        <div>
-          <p class="text-2xl font-black text-white">0%</p>
-          <p class="text-xs uppercase tracking-wider text-[#718096] mt-1">Retail Markup</p>
+        <div class="space-y-1">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Free Express Shipping</p>
+          <p class="text-xs text-[#718096]">On orders above ₹2,999 across India</p>
         </div>
-        <div>
-          <p class="text-2xl font-black text-white">380+ GSM</p>
-          <p class="text-xs uppercase tracking-wider text-[#718096] mt-1">Heavyweight Fabrics</p>
+        <div class="space-y-1">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Secure Payments</p>
+          <p class="text-xs text-[#718096]">UPI, Cards &amp; NetBanking via Razorpay</p>
         </div>
-        <div>
-          <p class="text-2xl font-black text-white">48h</p>
-          <p class="text-xs uppercase tracking-wider text-[#718096] mt-1">Express Dispatch</p>
+        <div class="space-y-1">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Cash on Delivery</p>
+          <p class="text-xs text-[#718096]">Available with instant phone OTP</p>
         </div>
-        <div>
-          <p class="text-2xl font-black text-white">100%</p>
-          <p class="text-xs uppercase tracking-wider text-[#718096] mt-1">Verified Delivery</p>
+        <div class="space-y-1">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Easy Exchanges</p>
+          <p class="text-xs text-[#718096]">Tailored fit guarantee</p>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <template>
-  <section id="featured-jackets" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+  <section id="featured-jackets" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 w-full min-w-0">
     <!-- Section Heading & Filter Tabs -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-[#1E2633] gap-4">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-[#1E2633] gap-4 w-full min-w-0">
       <div>
         <p class="text-xs font-bold uppercase tracking-[0.25em] text-[#D4AF37] mb-2">Curated Collection</p>
         <h2 class="text-2xl sm:text-4xl font-extrabold text-white uppercase tracking-tight">
@@ -10,7 +10,7 @@
       </div>
 
       <!-- Category Filter Pills -->
-      <div class="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+      <div class="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none w-full md:w-auto max-w-full min-w-0">
         <button
           v-for="cat in categories"
           :key="cat.id"

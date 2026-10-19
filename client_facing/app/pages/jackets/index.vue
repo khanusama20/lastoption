@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 w-full min-w-0">
     <!-- Breadcrumbs -->
     <nav class="flex items-center space-x-2 text-xs text-[#718096] uppercase tracking-wider mb-6">
       <NuxtLink to="/" class="hover:text-white transition-colors">Home</NuxtLink>
@@ -8,9 +8,9 @@
     </nav>
 
     <!-- Catalog Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[#1E2633] gap-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[#1E2633] gap-6 w-full min-w-0">
       <div>
-        <h1 class="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
+        <h1 class="text-2xl sm:text-4xl md:text-5xl font-black text-white uppercase tracking-tight break-words">
           Men's Outerwear
         </h1>
         <p class="text-sm sm:text-base text-[#A0AEC0] mt-2 max-w-xl">
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Category Filter Tabs -->
-    <div class="flex items-center space-x-2 my-8 overflow-x-auto pb-2 scrollbar-none">
+    <div class="flex items-center space-x-2 my-8 overflow-x-auto pb-2 scrollbar-none w-full max-w-full min-w-0">
       <button
         v-for="cat in categories"
         :key="cat.id"

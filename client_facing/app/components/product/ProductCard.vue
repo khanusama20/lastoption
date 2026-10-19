@@ -13,17 +13,18 @@
       <div class="absolute inset-0 bg-gradient-to-t from-[#14181F]/70 via-transparent to-transparent pointer-events-none"></div>
 
       <!-- Tag Badge (Top Left) -->
-      <div class="absolute top-3 left-3">
-        <span class="inline-block px-2.5 py-1 rounded bg-[#0B0D10]/80 backdrop-blur border border-[#2D3748] text-[10px] font-semibold uppercase tracking-wider text-[#D4AF37]">
+      <div class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 z-10">
+        <span class="inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 rounded bg-[#0B0D10]/85 backdrop-blur border border-[#2D3748] text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[#D4AF37]">
           {{ product.tag }}
         </span>
       </div>
 
-      <!-- Stock Alert Badge (Top Right) -->
-      <div v-if="lowStockVariant" class="absolute top-3 right-3">
-        <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-amber-950/80 border border-amber-600/40 text-[10px] font-semibold text-amber-300 tracking-wide">
+      <!-- Stock Alert Badge (Stacked below tag on mobile, Top Right on desktop) -->
+      <div v-if="lowStockVariant" class="absolute top-8 left-2.5 sm:top-3 sm:left-auto sm:right-3 z-10">
+        <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-amber-950/90 backdrop-blur border border-amber-600/50 text-[9px] sm:text-[10px] font-semibold text-amber-300 tracking-wide">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-          <span>Only {{ lowStockVariant.stockQuantity }} left in {{ lowStockVariant.size }}</span>
+          <span class="hidden sm:inline">Only {{ lowStockVariant.stockQuantity }} left in {{ lowStockVariant.size }}</span>
+          <span class="sm:hidden">{{ lowStockVariant.stockQuantity }} left ({{ lowStockVariant.size }})</span>
         </span>
       </div>
 
@@ -71,22 +72,22 @@
       </div>
 
       <!-- Colors Swatches matching Wireframe: Colors: [o][o] -->
-      <div class="pt-2 border-t border-[#1E2633] flex items-center justify-between">
-        <div class="flex items-center space-x-1.5">
-          <span class="text-[11px] text-[#718096] uppercase tracking-wider mr-1">Colors:</span>
+      <div class="pt-2 border-t border-[#1E2633] flex items-center justify-between gap-1 overflow-hidden">
+        <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
+          <span class="text-[10px] sm:text-[11px] text-[#718096] uppercase tracking-wider mr-0.5">Colors:</span>
           <button
             v-for="color in uniqueColors"
             :key="color.hex"
             type="button"
             :title="color.name"
             @click="selectedColor = color.name"
-            class="w-4 h-4 rounded-full border transition-all"
+            class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border transition-all"
             :class="selectedColor === color.name ? 'border-white scale-125' : 'border-[#2D3748] hover:border-gray-400'"
             :style="{ backgroundColor: color.hex }"
             :aria-label="`Select color ${color.name}`"
           ></button>
         </div>
-        <span class="text-[11px] text-[#A0AEC0]">
+        <span class="text-[10px] sm:text-[11px] text-[#A0AEC0] truncate max-w-[65px] sm:max-w-none text-right">
           {{ selectedColor || uniqueColors[0]?.name }}
         </span>
       </div>

@@ -19,11 +19,11 @@
             <!-- Brand Badge -->
             <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#14181F]/90 backdrop-blur border border-[#2D3748] text-xs text-[#D4AF37]">
               <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></span>
-              <span class="font-medium tracking-wider uppercase">Autumn / Winter Edition 2026</span>
+              <span class="font-medium tracking-wider uppercase">Outerwear Collection</span>
             </div>
 
             <!-- Wireframe Title -->
-            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white uppercase leading-[1.08]">
+            <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-normal sm:tracking-tight text-white uppercase leading-[1.12] break-words">
               Structured Elegance.<br />
               <span class="text-[#D4AF37]">Built to Endure.</span>
             </h1>
