@@ -227,21 +227,24 @@ async function main() {
   const adminPasswordHash = process.env.ADMIN_INITIAL_PASSWORD_HASH;
 
   if (adminEmail && adminPasswordHash) {
-    await prisma.user.upsert({
-      where: { email: adminEmail },
-      update: {
-        role: 'admin',
-        passwordHash: adminPasswordHash,
-      },
-      create: {
-        email: adminEmail,
-        passwordHash: adminPasswordHash,
-        role: 'admin',
-        firstName: 'Store',
-        lastName: 'Admin',
-      },
+    const existingUser = await prisma.user.findUnique({
+      where: { email: adminEmail.toLowerCase() },
     });
-    console.log(`[Prisma Seed] Admin user synchronized: ${adminEmail}`);
+
+    if (existingUser) {
+      console.log(`[Prisma Seed] Admin user already exists (${adminEmail}). Preserving existing credentials and account details.`);
+    } else {
+      await prisma.user.create({
+        data: {
+          email: adminEmail.toLowerCase(),
+          passwordHash: adminPasswordHash,
+          role: 'admin',
+          firstName: 'Store',
+          lastName: 'Admin',
+        },
+      });
+      console.log(`[Prisma Seed] Initial admin user provisioned: ${adminEmail}`);
+    }
   } else {
     console.log('[Prisma Seed] Note: No ADMIN_INITIAL_EMAIL configured. Skipping admin user creation.');
   }

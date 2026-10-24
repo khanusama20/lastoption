@@ -16,3 +16,13 @@ export const loginRateLimiter = rateLimit({
     },
   },
 });
+
+/**
+ * Reset rate limit counter for a specific IP.
+ * Used for testing and administrative resets.
+ */
+export function resetLoginRateLimit(ip: string): void {
+  if (typeof (loginRateLimiter as unknown as { resetKey: (k: string) => void }).resetKey === 'function') {
+    (loginRateLimiter as unknown as { resetKey: (k: string) => void }).resetKey(ip);
+  }
+}

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import healthRoutes from './health.routes';
 import authRoutes from './auth.routes';
 import { requireAuth, requireAdmin } from '../middleware/auth';
+import { sendSuccess } from '../utils/response';
 
 const router = Router();
 
@@ -13,8 +14,8 @@ router.use('/auth', authRoutes);
 
 // Admin authorization verification route (/api/v1/admin/verify)
 router.get('/admin/verify', requireAuth, requireAdmin, (req, res) => {
-  res.status(200).json({
-    success: true,
+  sendSuccess(res, {
+    statusCode: 200,
     message: 'Admin privileges verified',
     data: { user: req.user },
   });

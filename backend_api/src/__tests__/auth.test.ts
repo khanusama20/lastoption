@@ -4,6 +4,7 @@ import app from '../app';
 import { prisma } from '../config/prisma';
 import { hashPassword } from '../utils/password';
 import { signToken } from '../utils/jwt';
+import { resetLoginRateLimit } from '../middleware/rateLimiter';
 
 describe('Phase 2.2 — Authentication & Security API', () => {
   const timestamp = Date.now();
@@ -47,6 +48,10 @@ describe('Phase 2.2 — Authentication & Security API', () => {
   });
 
   afterAll(async () => {
+    // Reset rate limiter for local IP
+    resetLoginRateLimit('::ffff:127.0.0.1');
+    resetLoginRateLimit('127.0.0.1');
+
     // Clean up test accounts created during test execution
     await prisma.user.deleteMany({
       where: {
@@ -313,6 +318,9 @@ describe('Phase 2.2 — Authentication & Security API', () => {
 
   describe('6. Rate Limiting Protection', () => {
     it('enforces brute-force limits after excessive login attempts', async () => {
+      resetLoginRateLimit('::ffff:127.0.0.1');
+      resetLoginRateLimit('127.0.0.1');
+
       let lastRes;
       // Send 11 rapid requests to trigger the 10-attempt rate limit
       for (let i = 0; i < 11; i++) {
@@ -328,6 +336,10 @@ describe('Phase 2.2 — Authentication & Security API', () => {
       expect(lastRes?.status).toBe(429);
       expect(lastRes?.body.success).toBe(false);
       expect(lastRes?.body.error.message).toContain('Too many login attempts');
+
+      // Reset immediately after test so local IP is not locked out
+      resetLoginRateLimit('::ffff:127.0.0.1');
+      resetLoginRateLimit('127.0.0.1');
     });
   });
 });

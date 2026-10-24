@@ -1,13 +1,11 @@
 import { Response, CookieOptions } from 'express';
 import { config } from '../config/env';
 
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-
 export const authCookieOptions: CookieOptions = {
   httpOnly: true,
   secure: config.isProduction,
   sameSite: 'lax',
-  maxAge: SEVEN_DAYS_MS,
+  maxAge: config.cookieMaxAgeMs,
   path: '/',
 };
 

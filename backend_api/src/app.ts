@@ -9,6 +9,11 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 
 const app: Application = express();
 
+// Explicit reverse proxy trust configuration
+if (config.trustProxy !== false) {
+  app.set('trust proxy', config.trustProxy);
+}
+
 // Security HTTP headers
 app.use(helmet());
 

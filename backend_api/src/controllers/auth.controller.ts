@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { authService } from '../services/auth.service';
 import { setAuthCookie, clearAuthCookie } from '../utils/cookies';
+import { sendSuccess } from '../utils/response';
 
 export class AuthController {
   /**
@@ -12,8 +13,8 @@ export class AuthController {
       const { user, token } = await authService.register(req.body);
       setAuthCookie(res, token);
 
-      res.status(201).json({
-        success: true,
+      sendSuccess(res, {
+        statusCode: 201,
         message: 'Account registered successfully',
         data: { user },
       });
@@ -31,8 +32,8 @@ export class AuthController {
       const { user, token } = await authService.login(req.body);
       setAuthCookie(res, token);
 
-      res.status(200).json({
-        success: true,
+      sendSuccess(res, {
+        statusCode: 200,
         message: 'Logged in successfully',
         data: { user },
       });
@@ -49,8 +50,8 @@ export class AuthController {
     try {
       clearAuthCookie(res);
 
-      res.status(200).json({
-        success: true,
+      sendSuccess(res, {
+        statusCode: 200,
         message: 'Logged out successfully',
       });
     } catch (error) {
@@ -66,8 +67,8 @@ export class AuthController {
     try {
       const user = await authService.getProfile(req.user!.id);
 
-      res.status(200).json({
-        success: true,
+      sendSuccess(res, {
+        statusCode: 200,
         data: { user },
       });
     } catch (error) {
@@ -83,8 +84,8 @@ export class AuthController {
     try {
       const user = await authService.updateProfile(req.user!.id, req.body);
 
-      res.status(200).json({
-        success: true,
+      sendSuccess(res, {
+        statusCode: 200,
         message: 'Profile updated successfully',
         data: { user },
       });

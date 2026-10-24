@@ -6,6 +6,15 @@ export interface AppError extends Error {
   details?: unknown;
 }
 
+export interface ApiErrorResponse {
+  success: false;
+  error: {
+    message: string;
+    details?: unknown;
+    stack?: string;
+  };
+}
+
 export const errorHandler = (
   err: AppError,
   req: Request,
@@ -14,18 +23,27 @@ export const errorHandler = (
   next: NextFunction
 ): void => {
   const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
+  const isServerFault = statusCode >= 500;
 
-  if (statusCode >= 500 && config.nodeEnv !== 'test') {
+  // Mask internal server faults in production to prevent information disclosure
+  const message =
+    isServerFault && config.isProduction
+      ? 'An unexpected internal server error occurred. Please try again later.'
+      : err.message || 'Internal Server Error';
+
+  // Server-side logging for diagnostics
+  if (isServerFault && config.nodeEnv !== 'test') {
     console.error(`[Server Error] ${req.method} ${req.url} - Status ${statusCode}:`, err);
   }
 
-  res.status(statusCode).json({
+  const responseBody: ApiErrorResponse = {
     success: false,
     error: {
       message,
       ...(config.nodeEnv === 'development' && { stack: err.stack }),
-      ...(err.details ? { details: err.details } : {})
-    }
-  });
+      ...(err.details ? { details: err.details } : {}),
+    },
+  };
+
+  res.status(statusCode).json(responseBody);
 };
