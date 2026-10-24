@@ -16,7 +16,9 @@ export const errorHandler = (
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
 
-  console.error(`[Error] ${req.method} ${req.url} - Status ${statusCode}:`, err);
+  if (statusCode >= 500 && config.nodeEnv !== 'test') {
+    console.error(`[Server Error] ${req.method} ${req.url} - Status ${statusCode}:`, err);
+  }
 
   res.status(statusCode).json({
     success: false,

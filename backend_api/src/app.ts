@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import { config } from './config/env';
 import apiRouter from './routes';
 import { errorHandler } from './middleware/errorHandler';
@@ -11,7 +12,7 @@ const app: Application = express();
 // Security HTTP headers
 app.use(helmet());
 
-// CORS configuration
+// CORS configuration (Credentials enabled for HttpOnly cookies)
 app.use(
   cors({
     origin: config.clientUrl,
@@ -22,6 +23,9 @@ app.use(
 // Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Cookie parsing with secret
+app.use(cookieParser(config.cookieSecret));
 
 // API version 1 router
 app.use('/api/v1', apiRouter);
