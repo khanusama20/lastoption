@@ -118,6 +118,10 @@ The architecture separates the frontend customer experience and backend business
   - Sensitive payment data never touches our server (handled directly by Razorpay SDK).
   - Webhook signatures strictly verified for Razorpay and Courier callbacks.
   - API rate limiting on auth and OTP endpoints to prevent abuse.
+- **Standardized API Contract & Observability:**
+  - Uniform success and error response envelopes (`{ success, message, data }` / `{ success, error }`) with semantic HTTP status codes, managed by a centralized typed utility (`sendSuccess`) and aligned `errorHandler`.
+  - Structured application and HTTP request logging using **Pino** and `pino-http` streamed directly to `stdout`/`stderr` (12-factor cloud-native design, independent of hosting providers with no separate logging databases).
+  - Strict zero-leakage redaction preventing passwords, password hashes, OTPs, auth tokens, cookies, and payment secrets from appearing in logs.
 - **SEO & Social Sharing:**
   - Dynamic Open Graph tags (jacket preview image, title, price) on PDP for WhatsApp/Instagram sharing.
   - Clean semantic HTML5 and structured JSON-LD schema (`Product`, `Offer`, `BreadcrumbList`).

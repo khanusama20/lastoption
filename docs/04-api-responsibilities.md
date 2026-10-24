@@ -24,6 +24,9 @@ The `backend_api/` server acts as the single source of truth for all business op
    Generates secure, time-limited 4-digit OTPs sent via SMS/WhatsApp, preventing unverified or fake orders from entering the warehouse queue.
 6. **Immutable Order Processing:**  
    Snapshots customer addresses and product prices at the exact time of checkout, ensuring financial and legal compliance.
+7. **Centralized Response Formatting & Structured Observability:**  
+   - Enforces uniform API response envelopes via a typed `sendSuccess()` utility across all controllers, paired with the centralized `errorHandler`.
+   - Utilizes **Pino** and `pino-http` for lightweight, vendor-agnostic HTTP request and application logging to stdout/stderr with automatic redaction of sensitive credentials and PII.
 
 ---
 
@@ -132,3 +135,37 @@ All endpoints are prefixed with `/api/v1`.
   If zero rows are updated, the transaction aborts and notifies the shopper that the jacket just sold out.
 - **Rate Limiting:** `express-rate-limit` prevents brute-force attempts on `/auth/login` and `/checkout/cod/send-otp`.
 - **CORS & Headers:** Uses `helmet` for secure HTTP headers and restricts CORS strictly to the Nuxt frontend domain.
+- **Centralized API Response Structure:**
+  - Standardizes success and error response formats across all API endpoints using typed helpers (`sendSuccess`) instead of constructing repetitive response objects independently in controllers.
+  - Preserves semantically appropriate HTTP status codes (e.g. `200 OK`, `201 Created`, `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`, `429 Too Many Requests`, `500 Internal Server Error`).
+  - **Success Response Contract:**
+    ```json
+    {
+      "success": true,
+      "message": "Human-readable confirmation (optional)",
+      "data": { ... } // Payload object or array (optional)
+    }
+    ```
+  - **Error Response Contract (Aligned with centralized `errorHandler`):**
+    ```json
+    {
+      "success": false,
+      "error": {
+        "message": "Sanitized error message",
+        "details": [ ... ] // Optional field-level validation issues
+      }
+    }
+    ```
+    In production (`NODE_ENV=production`), unexpected 5xx server errors return a generic message (`"An unexpected internal server error occurred. Please try again later."`) and omit stack traces, keeping diagnostic internals strictly server-side.
+  - **Health Check Exception:** `GET /health` intentionally returns standard RFC-compatible `{ "status": "ok", "service": "...", "version": "...", ... }` rather than the application envelope, ensuring out-of-the-box compatibility with container orchestrators, Docker `HEALTHCHECK`, and load-balancer liveness probes.
+- **Structured Request Logging with Pino:**
+  - **Engine:** Uses **Pino** for structured application logging and `pino-http` for HTTP request logging.
+  - **Captured Metadata:** Automatically generates and records unique correlation Request IDs (`req.id`), HTTP method, sanitized route/path, HTTP status code, request duration in milliseconds, environment, and sanitized error details on failures.
+  - **Environment-Aware Output:**
+    - *Development:* Formatted human-readable output using `pino-pretty`.
+    - *Production:* High-throughput, single-line structured JSON streamed directly to `stdout` / `stderr`.
+  - **Sensitive Data Redaction (Zero-Leakage Policy):**
+    - Automatically redacts and never logs passwords, password hashes, OTPs, authentication tokens (`JWT`, `lo_auth_token`), cookies, `Authorization` headers, credit card / payment secrets, or unrestricted request/response bodies.
+  - **Vendor-Agnostic Observability:**
+    - Strictly follows 12-factor application logging (streaming directly to standard output).
+    - Operates independently of hosting providers without introducing MongoDB, a separate logging database, or proprietary cloud-agent dependencies (e.g. AWS CloudWatch agents) into the application codebase.

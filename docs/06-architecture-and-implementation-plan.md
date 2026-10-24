@@ -33,6 +33,7 @@
 |                                                                                         |
 |  - Layered Architecture: Routes -> Controllers -> Services -> Database Models           |
 |  - Zod Request Validation & Helmet Security Headers                                     |
+|  - Standardized Response Envelope (sendSuccess/errorHandler) & Pino Structured Logging  |
 |  - Atomic Database Transactions (Zero overselling guarantee)                            |
 +-----------------------------------------------------------------------------------------+
        |                           |                          |                     |
@@ -58,6 +59,10 @@
    - Tailwind lets us establish a tailored, luxury brand theme for *Last Option* (deep blacks, muted slates, refined typography, and subtle micro-animations) without bloating the application with heavy third-party CSS libraries.
 5. **Why `HttpOnly` Cookies for Authentication?**  
    - Storing login tokens in `localStorage` leaves them vulnerable to malicious scripts (XSS). An `HttpOnly` cookie cannot be read or stolen by browser scripts, making customer accounts and admin privileges significantly safer.
+6. **Why a Centralized API Response Helper (`sendSuccess`)?**  
+   - Inconsistent API responses make frontend data handling brittle and error-prone. By enforcing a standardized response envelope (`{ success, message, data }` for success and `{ success, error: { message, details } }` for errors) via a reusable, typed utility alongside the centralized `errorHandler`, controllers avoid repetitive boilerplate while preserving semantic HTTP status codes.
+7. **Why Pino for Structured Request Logging?**  
+   - E-commerce backends require high-performance, non-blocking observability. Pino streams lightweight JSON logs directly to `stdout`/`stderr` adhering to 12-factor cloud principles, avoiding expensive database queries (e.g. MongoDB) or cloud vendor lock-in. Built-in redaction guarantees that sensitive credentials, tokens, OTPs, and cookies are never leaked to logs.
 
 ---
 
@@ -72,10 +77,12 @@ Implementation will proceed in 7 focused phases. Each phase will be verified bef
 - Write a database seed script with sample Last Option jacket collections, color/size variants, and a default admin user.
 
 ### Phase 2: Express Backend Foundation
-- Implement authentication system (Register, Login, Logout, Me) with `bcrypt` and JWT in `HttpOnly` cookies.
-- Create role-guard middleware (`requireAuth`, `requireAdmin`).
-- Build catalog endpoints (`GET /api/v1/products`, `GET /api/v1/products/:slug`).
-- Build courier serviceability check endpoint (`GET /api/v1/shipping/check-pincode`).
+- **Phase 2.1 — Database & ORM Setup (Completed):** PostgreSQL schema, Prisma ORM, versioned migrations, check constraints (`stock_non_negative`, `quantity_positive`), and idempotent jacket catalog seed.
+- **Phase 2.2 — Authentication & Security (Completed):** Register, Login, Logout, Profile endpoints with `bcrypt`, JWT in `HttpOnly` cookies, rate limiting, production secret validation, role guards (`requireAuth`, `requireAdmin`), and centralized API response structure (`sendSuccess` utility and aligned `errorHandler`).
+- **Phase 2.3 — Product Catalog & Inventory APIs (Next):**
+  - Integrate **Pino** structured application logging and `pino-http` request logging middleware (request ID tracking, latency, status codes, and zero-leakage redaction of credentials/tokens).
+  - Public jacket listings with filtering, full PDP details with multi-image gallery, and real-time variant stock queries (`GET /api/v1/products`, `GET /api/v1/products/:slug`, `GET /api/v1/products/:id/check-stock`).
+- **Phase 2.4 — Shipping & Courier Serviceability APIs:** Pincode serviceability checks and live rate calculation (`GET /api/v1/shipping/check-pincode`, `POST /api/v1/shipping/calculate-rates`).
 
 ### Phase 3: Nuxt 4 Storefront UI & Product Experience
 - Initialize `client_facing/` with Nuxt 4, Vue 3, and Tailwind CSS.
