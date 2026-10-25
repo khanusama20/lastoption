@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { config } from '../config/env';
+import { logger } from '../config/logger';
 
 export interface AppError extends Error {
   statusCode?: number;
@@ -31,9 +32,15 @@ export const errorHandler = (
       ? 'An unexpected internal server error occurred. Please try again later.'
       : err.message || 'Internal Server Error';
 
-  // Server-side logging for diagnostics
-  if (isServerFault && config.nodeEnv !== 'test') {
-    console.error(`[Server Error] ${req.method} ${req.url} - Status ${statusCode}:`, err);
+  // Attach error to response for structured pino-http logging on request finish
+  res.err = err;
+
+  // Fallback structured log only if pino-http request logger was not mounted
+  if (isServerFault && config.nodeEnv !== 'test' && !req.log) {
+    logger.error(
+      { err, reqId: req.id, method: req.method, url: req.url, statusCode },
+      err.message || 'Internal Server Error'
+    );
   }
 
   const responseBody: ApiErrorResponse = {

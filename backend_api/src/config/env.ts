@@ -119,6 +119,7 @@ if (isProduction) {
 }
 
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '7d';
+const logLevel = process.env.LOG_LEVEL || (isTest ? 'silent' : isProduction ? 'info' : 'debug');
 
 export const config = {
   port: parseInt(process.env.PORT || '5000', 10),
@@ -126,6 +127,7 @@ export const config = {
   clientUrl: process.env.CLIENT_URL || 'http://localhost:3000',
   isProduction,
   isTest,
+  logLevel,
   databaseUrl: activeDatabaseUrl,
   jwtSecret,
   cookieSecret,

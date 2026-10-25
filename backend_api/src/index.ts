@@ -1,17 +1,22 @@
 import app from './app';
 import { config } from './config/env';
+import { logger } from './config/logger';
 
 const server = app.listen(config.port, () => {
-  console.log(`[Last Option Backend API] Server running on http://localhost:${config.port}`);
-  console.log(`[Last Option Backend API] Environment: ${config.nodeEnv}`);
-  console.log(`[Last Option Backend API] Health check at http://localhost:${config.port}/api/v1/health`);
+  logger.info(
+    { port: config.port, env: config.nodeEnv },
+    `[Last Option Backend API] Server running on http://localhost:${config.port}`
+  );
+  logger.info(
+    `[Last Option Backend API] Health check at http://localhost:${config.port}/api/v1/health`
+  );
 });
 
 // Graceful shutdown handling
 const gracefulShutdown = (signal: string) => {
-  console.log(`\nReceived ${signal}. Shutting down gracefully...`);
+  logger.info(`Received ${signal}. Shutting down gracefully...`);
   server.close(() => {
-    console.log('HTTP server closed.');
+    logger.info('HTTP server closed.');
     process.exit(0);
   });
 };

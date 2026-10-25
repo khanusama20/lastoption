@@ -151,14 +151,22 @@ All endpoints are prefixed with `/api/v1`.
     {
       "success": false,
       "error": {
-        "message": "Sanitized error message",
-        "details": [ ... ] // Optional field-level validation issues
+        "message": "Error description or sanitized generic message",
+        "details": [ ... ], // Optional field-level validation issues or error metadata
+        "stack": "..."      // Conditionally included ONLY in development (NODE_ENV === 'development')
       }
     }
     ```
-    In production (`NODE_ENV=production`), unexpected 5xx server errors return a generic message (`"An unexpected internal server error occurred. Please try again later."`) and omit stack traces, keeping diagnostic internals strictly server-side.
+    - **Production Behavior (`NODE_ENV=production`):**
+      - **Stack Traces:** Strictly omitted (`stack` is never present in API responses) to prevent internal system or filepath disclosure.
+      - **5xx Server Errors:** Generic message returned (`"An unexpected internal server error occurred. Please try again later."`) masking internal error details and exception messages. Full error details are logged server-side only.
+      - **4xx Client Errors:** Explicit, sanitized client messages (`err.message`) and structured validation details (`err.details`, such as Zod issue arrays) are returned.
+    - **Non-Production Behavior (`NODE_ENV=development` / `NODE_ENV=test`):**
+      - **Development (`NODE_ENV=development`):** `error.stack` is attached directly to the response object to assist local debugging, and actual error messages are preserved across both 4xx and 5xx errors.
+      - **Test (`NODE_ENV=test`):** `error.stack` is omitted (same as production), preserving raw `err.message` for test assertions while keeping test output and assertions clean.
   - **Health Check Exception:** `GET /health` intentionally returns standard RFC-compatible `{ "status": "ok", "service": "...", "version": "...", ... }` rather than the application envelope, ensuring out-of-the-box compatibility with container orchestrators, Docker `HEALTHCHECK`, and load-balancer liveness probes.
 - **Structured Request Logging with Pino:**
+  - **Prerequisite Requirement:** Mandatory foundation task that must be fully implemented and verified before Phase 2.3 product catalog and inventory API implementation begins.
   - **Engine:** Uses **Pino** for structured application logging and `pino-http` for HTTP request logging.
   - **Captured Metadata:** Automatically generates and records unique correlation Request IDs (`req.id`), HTTP method, sanitized route/path, HTTP status code, request duration in milliseconds, environment, and sanitized error details on failures.
   - **Environment-Aware Output:**
@@ -169,3 +177,10 @@ All endpoints are prefixed with `/api/v1`.
   - **Vendor-Agnostic Observability:**
     - Strictly follows 12-factor application logging (streaming directly to standard output).
     - Operates independently of hosting providers without introducing MongoDB, a separate logging database, or proprietary cloud-agent dependencies (e.g. AWS CloudWatch agents) into the application codebase.
+- **Production Deployment Checklist:**
+  - **Mandatory `NODE_ENV=production` Configuration:** All production host/container environments must explicitly set `NODE_ENV=production`. This activates:
+    - Pre-flight secret validation at server boot, terminating immediately if secrets are missing, short, or placeholder values.
+    - Masking of internal 5xx server errors into a generic user-facing message.
+    - Strict suppression of stack traces in API error responses.
+    - Single-line structured JSON log streaming to `stdout`/`stderr`.
+    - Cookie security flags (`Secure=true`).

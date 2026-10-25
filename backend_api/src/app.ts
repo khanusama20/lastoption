@@ -6,6 +6,7 @@ import { config } from './config/env';
 import apiRouter from './routes';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
+import { requestLogger } from './middleware/requestLogger';
 
 const app: Application = express();
 
@@ -24,6 +25,9 @@ app.use(
     credentials: true,
   })
 );
+
+// Structured HTTP request logging & Request ID tracking
+app.use(requestLogger);
 
 // Body parsing
 app.use(express.json());

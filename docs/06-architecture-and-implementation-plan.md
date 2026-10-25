@@ -80,8 +80,8 @@ Implementation will proceed in 7 focused phases. Each phase will be verified bef
 - **Phase 2.1 — Database & ORM Setup (Completed):** PostgreSQL schema, Prisma ORM, versioned migrations, check constraints (`stock_non_negative`, `quantity_positive`), and idempotent jacket catalog seed.
 - **Phase 2.2 — Authentication & Security (Completed):** Register, Login, Logout, Profile endpoints with `bcrypt`, JWT in `HttpOnly` cookies, rate limiting, production secret validation, role guards (`requireAuth`, `requireAdmin`), and centralized API response structure (`sendSuccess` utility and aligned `errorHandler`).
 - **Phase 2.3 — Product Catalog & Inventory APIs (Next):**
-  - Integrate **Pino** structured application logging and `pino-http` request logging middleware (request ID tracking, latency, status codes, and zero-leakage redaction of credentials/tokens).
-  - Public jacket listings with filtering, full PDP details with multi-image gallery, and real-time variant stock queries (`GET /api/v1/products`, `GET /api/v1/products/:slug`, `GET /api/v1/products/:id/check-stock`).
+  - **Prerequisite (Foundational Logging):** Integrate **Pino** structured application logging and `pino-http` request logging middleware (request ID tracking, latency, status codes, development vs. production formats, and zero-leakage redaction of credentials/tokens). This must be completed and verified before starting catalog API endpoint development.
+  - **Catalog & Inventory Implementation:** Public jacket listings with filtering, full PDP details with multi-image gallery, and real-time variant stock queries (`GET /api/v1/products`, `GET /api/v1/products/:slug`, `GET /api/v1/products/:id/check-stock`).
 - **Phase 2.4 — Shipping & Courier Serviceability APIs:** Pincode serviceability checks and live rate calculation (`GET /api/v1/shipping/check-pincode`, `POST /api/v1/shipping/calculate-rates`).
 
 ### Phase 3: Nuxt 4 Storefront UI & Product Experience
@@ -120,3 +120,9 @@ Implementation will proceed in 7 focused phases. Each phase will be verified bef
 - Verify race-condition handling on low-stock items.
 - Run mobile responsiveness and performance audit (Lighthouse score 90+).
 - Set up SEO metadata and Open Graph tags for social sharing.
+- **Production Deployment Checklist:**
+  - **Mandatory Environment Flag:** Explicitly require and verify `NODE_ENV=production` in all production container and hosting environments. Setting this flag is mandatory to activate production secret validation, mask internal 5xx server fault messages, suppress stack traces in error responses, enable single-line structured JSON logging to `stdout`/`stderr`, and enforce `Secure` cookie attributes.
+  - **Secrets & Credentials:** Ensure production secrets (`JWT_SECRET`, `COOKIE_SECRET`, `DATABASE_URL`) meet minimum 32-character entropy requirements with zero development placeholders.
+  - **Reverse Proxy Topology:** Configure `TRUST_PROXY` to match host topology (e.g. `1` for single-hop CDN/reverse proxy, or specific subnets).
+  - **CORS & Domain Locking:** Restrict `CLIENT_URL` strictly to the production frontend domain.
+  - **Database Migrations:** Run `prisma migrate deploy` to ensure schema consistency before routing traffic.
