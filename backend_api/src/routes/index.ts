@@ -2,6 +2,7 @@ import { Router } from 'express';
 import healthRoutes from './health.routes';
 import authRoutes from './auth.routes';
 import productRoutes from './product.routes';
+import shippingRoutes from './shipping.routes';
 import { requireAuth, requireAdmin } from '../middleware/auth';
 import { sendSuccess } from '../utils/response';
 
@@ -15,6 +16,9 @@ router.use('/auth', authRoutes);
 
 // Product Catalog & Inventory routes (/api/v1/products)
 router.use('/products', productRoutes);
+
+// Shipping & Courier Serviceability routes (/api/v1/shipping)
+router.use('/shipping', shippingRoutes);
 
 // Admin authorization verification route (/api/v1/admin/verify)
 router.get('/admin/verify', requireAuth, requireAdmin, (req, res) => {
